@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,16 +13,21 @@ namespace AlgorithmsCSharp
         public static void Sort(int[] arr)
         {
             int[] aux = new int[arr.Length];
-            Sort(arr, aux, 0, arr.Length / 2, arr.Length - 1);
+            Sort(arr, aux, 0, arr.Length - 1);
         }
 
-        private static void Sort(int[] arr, int[] aux, int lo, int mid, int hi)
+        private static void Sort(int[] arr, int[] aux, int lo, int hi)
         {
-            if (arr.Length > 1)
+            if (hi == lo)
             {
-                Sort(arr, aux, lo, mid/2, mid); //sort left sub array
-                Sort(arr, aux, mid + 1, mid + (hi - mid)/2, hi); //sort right sub array
+                return;
             }
+
+            int mid = lo + (hi - lo)/2;
+
+            Sort(arr, aux, lo, mid); //sort left sub array
+            Sort(arr, aux, mid + 1, hi); //sort right sub array
+
             Merge(arr, aux, lo, mid, hi);
         }
 
@@ -91,6 +97,45 @@ namespace AlgorithmsCSharp
             MergeSort.Merge(arr, new int[arr.Length], 0, 3, arr.Length - 1);
 
             CollectionAssert.AreEqual(expectedArr, arr);
+        }
+
+        [Test]
+        public void When_ArrayIsNotSortedAndSortIsCalled_Then_Sorted()
+        {
+            int[] actual = {5, 3, 2, 1};
+            int[] expected = actual.OrderBy(a => a).ToArray();
+
+            MergeSort.Sort(actual);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void When_LargeArrayIsNotSortedAndSortIsCalled_Then_Sorted()
+        {
+            Random random = new Random((int) DateTime.Now.Ticks);
+            int size = 1000;
+            int[] actual = new int[size];
+            for (int i = 0; i < size; i++)
+            {
+                actual[i] = random.Next(10000);
+            }
+            int[] expected = actual.OrderBy(a => a).ToArray();
+            
+            MergeSort.Sort(actual);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void When_ArrayIsAlreadySortedAndSortIsCalled_Then_SortIsMaintained()
+        {
+            int[] actual = Enumerable.Range(1, 1000).ToArray();
+            int[] expected = actual.OrderBy(a => a).ToArray();
+
+            MergeSort.Sort(actual);
+
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
