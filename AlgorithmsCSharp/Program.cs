@@ -10,6 +10,15 @@ namespace AlgorithmsCSharp
     {
         static void Main(string[] args)
         {
+            int[] arr = new int[10];
+            SetArr(arr);
+            Console.WriteLine(arr[0]);
+            Console.ReadLine();
+        }
+
+        public static void SetArr(int[] arr)
+        {
+            arr[0] = 1;
         }
     }
 }
